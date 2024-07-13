@@ -68,6 +68,33 @@ export const verifyWithDynamic = async (data: {
   }
 };
 
+export const getCurrentUserWithDynamic = async (jwt: string) => {
+  const options = {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${jwt}`,
+    },
+  };
+  try {
+    const res = await fetch(
+      `https://app.dynamicauth.com/api/v0/sdk/${process.env.NEXT_PUBLIC_DYNAMIC_ENVIRONMENT_ID}/users`,
+      options
+    );
+    if (!res.ok) {
+      console.log(await res.text());
+      throw new Error("Failed to get user with Dynamic");
+    }
+    const data = await res.json();
+    return data;
+  } catch (e) {
+    console.error(e);
+    return {
+      error: true,
+    };
+  }
+};
+
 export const generateSiweNonceWithDynamic = async () => {
   const options = {
     method: "GET",

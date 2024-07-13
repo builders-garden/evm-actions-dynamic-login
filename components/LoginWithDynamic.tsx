@@ -1,4 +1,5 @@
 "use client";
+import { getCurrentUserWithDynamic } from "@/lib/dynamic-api";
 import {
   DynamicWidget,
   useRefreshUser,
@@ -16,14 +17,29 @@ export default function LoginWithDynamic() {
   const minJwt = searchParams.get("minJwt");
   useEffect(() => {
     if (jwt && !didSaveToken) {
-      console.log("Saving tokens", {
-        jwt,
-        minJwt,
-      });
       didSaveToken = true;
       localStorage.setItem("dynamic_authentication_token", `"${jwt}"`);
       localStorage.setItem("dynamic_min_authentication_token", `"${minJwt}"`);
-      refresh();
+      getCurrentUserWithDynamic(jwt).then((user) => {
+        const dynamicStore = localStorage.getItem("dynamic_store");
+        if (dynamicStore) {
+          const parsedStore = JSON.parse(dynamicStore);
+          const state = {
+            ...parsedStore.state,
+            user,
+          };
+          localStorage.setItem(
+            "dynamic_store",
+            JSON.stringify({ state, version: 0 })
+          );
+        } else {
+          localStorage.setItem(
+            "dynamic_store",
+            JSON.stringify({ state: { user } })
+          );
+        }
+        refresh();
+      });
     }
   }, []);
   return <DynamicWidget />;
