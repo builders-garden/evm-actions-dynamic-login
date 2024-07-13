@@ -7,7 +7,7 @@ export const GET = async (req: NextRequest) => {
     title: "Dynamic Login EVM Action",
     description:
       "This is a sample EVM action integrating Dynamic 1-click Login",
-    image: `${appURL()}/landing`,
+    image: `${appURL()}/landing.png`,
     links: [
       {
         targetUrl: `${appURL()}/api/action-login`,
