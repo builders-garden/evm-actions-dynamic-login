@@ -1,3 +1,4 @@
+"use client";
 import { ChainEnum, verifyWithDynamic } from "@/lib/dynamic-api";
 import { appURL } from "@/lib/utils";
 import { redirect } from "next/navigation";
