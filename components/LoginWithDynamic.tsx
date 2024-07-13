@@ -1,3 +1,4 @@
+"use client";
 import { DynamicWidget, useRefreshUser } from "@dynamic-labs/sdk-react-core";
 import { useSearchParams } from "next/navigation";
 import { useEffect } from "react";

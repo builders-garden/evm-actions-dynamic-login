@@ -1,5 +1,6 @@
 "use client";
 import LoginWithDynamic from "@/components/LoginWithDynamic";
+import { Suspense } from "react";
 
 export default function Home() {
   return (
@@ -9,7 +10,9 @@ export default function Home() {
           <h1 className="text-4xl font-bold text-center">
             1-click login with Dynamic using EVM Actions
           </h1>
-          <LoginWithDynamic />
+          <Suspense>
+            <LoginWithDynamic />
+          </Suspense>
         </div>
       </div>
     </main>
