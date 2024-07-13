@@ -29,23 +29,37 @@ export const verifyWithDynamic = async (data: {
   signedMessage: string;
   publicWalletAddress: string;
   chain: ChainEnum;
+  nonce: string;
 }) => {
+  console.log("Verifying with Dynamic");
+  console.log({
+    domain: appURL().replace("https://", ""),
+    address: data.publicWalletAddress as `0x${string}`,
+    uri: appURL(),
+    version: "1",
+    chainId: baseSepolia.id,
+    nonce: data.nonce,
+  });
   const messageToSign = createSiweMessage({
     domain: appURL().replace("https://", ""),
     address: data.publicWalletAddress as `0x${string}`,
     uri: appURL(),
     version: "1",
     chainId: baseSepolia.id,
-    nonce: generateSiweNonce(),
+    nonce: data.nonce,
+  });
+  console.log({
+    messageToSign,
   });
   const body: VerifyRequest = {
     signedMessage: data.signedMessage,
-    messageToSign: JSON.stringify(messageToSign),
+    messageToSign,
     publicWalletAddress: data.publicWalletAddress,
-    chain: ChainEnum.ETH,
+    chain: data.chain,
     walletName: "evm-action",
     walletProvider: "browserExtension",
   };
+  console.log(body);
   const options = {
     method: "POST",
     headers: { "Content-Type": "application/json" },
