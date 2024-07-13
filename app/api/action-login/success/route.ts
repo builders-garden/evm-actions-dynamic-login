@@ -4,12 +4,12 @@ import { NextRequest, NextResponse } from "next/server";
 
 export const POST = async (req: NextRequest) => {
   const body = await req.json();
-  const { signedMessage, address, chain, nonce } = body;
+  const { signedMessage, messageToSign, address, chain } = body;
   const res = await verifyWithDynamic({
     signedMessage: signedMessage!,
+    messageToSign,
     publicWalletAddress: address!,
     chain: chain as ChainEnum,
-    nonce,
   });
   if (res.error) {
     return NextResponse.json(

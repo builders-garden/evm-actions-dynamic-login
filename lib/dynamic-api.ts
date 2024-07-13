@@ -27,39 +27,19 @@ export interface VerifyResponse {
 
 export const verifyWithDynamic = async (data: {
   signedMessage: string;
+  messageToSign: string;
   publicWalletAddress: string;
   chain: ChainEnum;
-  nonce: string;
 }) => {
-  console.log("Verifying with Dynamic");
-  console.log({
-    domain: appURL().replace("https://", ""),
-    address: data.publicWalletAddress as `0x${string}`,
-    uri: appURL(),
-    version: "1",
-    chainId: baseSepolia.id,
-    nonce: data.nonce,
-  });
-  const messageToSign = createSiweMessage({
-    domain: appURL().replace("https://", ""),
-    address: data.publicWalletAddress as `0x${string}`,
-    uri: appURL(),
-    version: "1",
-    chainId: baseSepolia.id,
-    nonce: data.nonce,
-  });
-  console.log({
-    messageToSign,
-  });
   const body: VerifyRequest = {
     signedMessage: data.signedMessage,
-    messageToSign,
+    messageToSign: data.messageToSign,
     publicWalletAddress: data.publicWalletAddress,
     chain: data.chain,
     walletName: "evm-action",
     walletProvider: "browserExtension",
   };
-  console.log(body);
+  // console.log(body);
   const options = {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -72,6 +52,7 @@ export const verifyWithDynamic = async (data: {
       options
     );
     if (!res.ok) {
+      console.log(await res.text());
       throw new Error("Failed to verify with Dynamic");
     }
     const data = await res.json();
@@ -79,6 +60,30 @@ export const verifyWithDynamic = async (data: {
       error: false,
       result: data,
     };
+  } catch (e) {
+    console.error(e);
+    return {
+      error: true,
+    };
+  }
+};
+
+export const generateSiweNonceWithDynamic = async () => {
+  const options = {
+    method: "GET",
+    headers: { "Content-Type": "application/json" },
+  };
+  try {
+    const res = await fetch(
+      `https://app.dynamicauth.com/api/v0/sdk/${process.env.NEXT_PUBLIC_DYNAMIC_ENVIRONMENT_ID}/nonce`,
+      options
+    );
+    if (!res.ok) {
+      console.log(await res.text());
+      throw new Error("Failed to generate nonce with Dynamic");
+    }
+    const data = await res.json();
+    return data.nonce;
   } catch (e) {
     console.error(e);
     return {
