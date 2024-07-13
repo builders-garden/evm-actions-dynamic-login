@@ -15,5 +15,7 @@ export const POST = async (req: NextRequest) => {
     chainId: baseSepolia.id,
     nonce: generateSiweNonce(),
   });
-  return NextResponse.json(messageToSign);
+  return NextResponse.json({
+    message: messageToSign,
+  });
 };
