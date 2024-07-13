@@ -20,7 +20,8 @@ export const POST = async (req: NextRequest) => {
     );
   }
   const jwt = res.result.jwt;
+  const minJwt = res.result.minifiedJwt;
   return NextResponse.json({
-    url: `${appURL()}?token=${jwt}`,
+    url: `${appURL()}?jwt=${jwt}&minJwt=${minJwt}`,
   });
 };
