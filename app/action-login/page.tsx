@@ -10,14 +10,12 @@ export default function ActionLoginPage({
   searchParams: URLSearchParams;
 }) {
   const signedMessage = searchParams.get("signedMessage");
-  const message = searchParams.get("message");
   const address = searchParams.get("address");
   const chain = searchParams.get("chain");
 
   const getDynamicJWT = useCallback(async () => {
     const res = await verifyWithDynamic({
       signedMessage: signedMessage!,
-      messageToSign: message!,
       publicWalletAddress: address!,
       chain: chain as ChainEnum,
     });
@@ -26,7 +24,7 @@ export default function ActionLoginPage({
       return;
     }
     redirect(`${appURL()}?token=${res.result.jwt}`);
-  }, [address, chain, message, signedMessage]);
+  }, [address, chain, signedMessage]);
 
   useEffect(() => {
     getDynamicJWT();

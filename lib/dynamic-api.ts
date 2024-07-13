@@ -1,4 +1,7 @@
-import { error } from "console";
+import { baseSepolia } from "viem/chains";
+import { generateSIWEMessage } from "./siwe";
+import { createSiweMessage, generateSiweNonce } from "viem/siwe";
+import { appURL } from "./utils";
 
 export declare enum ChainEnum {
   ETH = "ETH",
@@ -24,13 +27,20 @@ export interface VerifyResponse {
 
 export const verifyWithDynamic = async (data: {
   signedMessage: string;
-  messageToSign: string;
   publicWalletAddress: string;
   chain: ChainEnum;
 }) => {
+  const messageToSign = createSiweMessage({
+    domain: appURL().replace("https://", ""),
+    address: data.publicWalletAddress as `0x${string}`,
+    uri: appURL(),
+    version: "1",
+    chainId: baseSepolia.id,
+    nonce: generateSiweNonce(),
+  });
   const body: VerifyRequest = {
     signedMessage: data.signedMessage,
-    messageToSign: data.messageToSign,
+    messageToSign: JSON.stringify(messageToSign),
     publicWalletAddress: data.publicWalletAddress,
     chain: ChainEnum.ETH,
     walletName: "evm-action",

@@ -11,7 +11,7 @@ export const GET = async (req: NextRequest) => {
     links: [
       {
         targetUrl: `${appURL()}/api/action-login`,
-        postUrl: appURL(), // this will be a GET HTTP call
+        postUrl: `${appURL()}/action-login`, // this will be a GET HTTP call
         label: "1-click login",
         type: ActionLinkType.ONE_CLICK_LOGIN,
       },
